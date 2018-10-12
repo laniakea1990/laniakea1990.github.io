@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Istio," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Istio 生产案例房产交易平台——TruliaMicroservice Observability with Istio Istio和Kubernetes帮助Trulia房产网站消除单体架构增强微服务的可观测性 The Weather Company现状公司之前名为The Weather Channel，后改名为The Weather Company，2016年被IBM收购。 api.weat">
+<meta name="keywords" content="Istio">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Istio-Production-Case">
+<meta property="og:url" content="http://yoursite.com/2018/10/10/istio-production-case/index.html">
+<meta property="og:site_name" content="面朝大海 春暖花开">
+<meta property="og:description" content="Istio 生产案例房产交易平台——TruliaMicroservice Observability with Istio Istio和Kubernetes帮助Trulia房产网站消除单体架构增强微服务的可观测性 The Weather Company现状公司之前名为The Weather Channel，后改名为The Weather Company，2016年被IBM收购。 api.weat">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="http://yoursite.com/images/istio-production-case/weather-api-weather-com.png">
+<meta property="og:image" content="http://yoursite.com/images/istio-production-case/weather-api-sun-platform.png">
+<meta property="og:image" content="http://yoursite.com/images/istio-production-case/weather-sun-platform-7-functions.png">
+<meta property="og:image" content="http://yoursite.com/images/istio-production-case/weather-improvement.png">
+<meta property="og:image" content="http://yoursite.com/images/istio-production-case/weather-why-istio.png">
+<meta property="og:image" content="http://yoursite.com/images/istio-production-case/weather-service-entry.png">
+<meta property="og:image" content="http://yoursite.com/images/istio-production-case/weather-client-request.png">
+<meta property="og:image" content="http://yoursite.com/images/istio-production-case/weather-vistio-prometheus-grafana.png">
+<meta property="og:image" content="http://yoursite.com/images/istio-production-case/weather-where-we-are-today.png">
+<meta property="og:image" content="http://yoursite.com/images/istio-production-case/weather-using-istio.png">
+<meta property="og:image" content="http://yoursite.com/images/istio-production-case/golang-sidecar.png">
+<meta property="og:image" content="http://yoursite.com/images/istio-production-case/mixer-merge.png">
+<meta property="og:image" content="http://yoursite.com/images/istio-production-case/pilot-enhance.png">
+<meta property="og:updated_time" content="2018-10-12T09:02:53.314Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Istio-Production-Case">
+<meta name="twitter:description" content="Istio 生产案例房产交易平台——TruliaMicroservice Observability with Istio Istio和Kubernetes帮助Trulia房产网站消除单体架构增强微服务的可观测性 The Weather Company现状公司之前名为The Weather Channel，后改名为The Weather Company，2016年被IBM收购。 api.weat">
+<meta name="twitter:image" content="http://yoursite.com/images/istio-production-case/weather-api-weather-com.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/10/10/istio-production-case/"/>
+
+
+
+
+
+  <title>Istio-Production-Case | 面朝大海 春暖花开</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?0080baa52f68b20f9159197d012ef9cb";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">面朝大海 春暖花开</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/10/istio-production-case/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Goku">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="面朝大海 春暖花开">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Istio-Production-Case</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-10-10T09:28:41+08:00">
+                2018-10-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="Istio-生产案例"><a href="#Istio-生产案例" class="headerlink" title="Istio 生产案例"></a>Istio 生产案例</h1><h2 id="房产交易平台——Trulia"><a href="#房产交易平台——Trulia" class="headerlink" title="房产交易平台——Trulia"></a>房产交易平台——Trulia</h2><p><a href="https://www.trulia.com/blog/tech/microservice-observability-with-istio/" target="_blank" rel="noopener">Microservice Observability with Istio</a></p>
+<p><a href="http://www.servicemesher.com/blog/microservice-observability-with-istio/" target="_blank" rel="noopener">Istio和Kubernetes帮助Trulia房产网站消除单体架构增强微服务的可观测性</a></p>
+<h2 id="The-Weather-Company"><a href="#The-Weather-Company" class="headerlink" title="The Weather Company"></a>The Weather Company</h2><h3 id="现状"><a href="#现状" class="headerlink" title="现状"></a>现状</h3><p>公司之前名为The Weather Channel，后改名为The Weather Company，2016年被IBM收购。</p>
+<p>api.weather.com是该公司的主要服务产品(a platform built to sell and distribute weather data, known as Sun Platform)。有超过40个microservices运行在这个 Sun Platform 上面，每天接受数十亿次调用.<br><a id="more"></a></p>
+<p><img src="/images/istio-production-case/weather-api-weather-com.png" alt="weather-api-weather-com"></p>
+<p><img src="/images/istio-production-case/weather-api-sun-platform.png" alt="weather-api-sun-platform"></p>
+<p>Sun Platform主要执行7个functions，包括Authentication&amp;Authorization、Routing(核心的)、Monitoring等，目前平台的所有服务都运行在Kubernetes环境中。</p>
+<p><img src="/images/istio-production-case/weather-sun-platform-7-functions.png" alt="weather-sun-platform-7-functions"></p>
+<h3 id="引入Istio"><a href="#引入Istio" class="headerlink" title="引入Istio"></a>引入Istio</h3><p>The Weather Company想要在以下方面做出改进，包括引入自服务路由、熔断机制、重试机制，更好的可视化，以及使Sun Platform对外更透明<br><img src="/images/istio-production-case/weather-improvement.png" alt="weather-improvement"></p>
+<p>经过了调研大量的tools之后，公司选中了Istio，主要是看中了istio下面几个优点：</p>
+<p><img src="/images/istio-production-case/weather-why-istio.png" alt="why istio"></p>
+<p>起初（istio版本为0.8.0），Sun Platform将7个functions中的Routing和Monitoring与istio进行集成，通过Istio的ServiceEntry将原有的外部service(weather api的实现service)加入到Istio Mesh中<br><img src="/images/istio-production-case/weather-service-entry.png" alt="service entry"></p>
+<p>引入Istio后，一个client的请求流程如下图：</p>
+<p><img src="/images/istio-production-case/weather-client-request.png" alt="weather-client-request"></p>
+<p>另外，借助Istio集群自带的Prometheus、Grafana，以及Netflix的Vistio增强了Sun Platform的可视化程度。<br><img src="/images/istio-production-case/weather-vistio-prometheus-grafana.png" alt="weather-vistio-prometheus-grafana"></p>
+<p>截止Istio版本0.8.0，The Weather Company使用Istio已经八个多月了，api.weather.com还没有在生产环境部署，目前生产环境只有部分APIs使用了istio<br><img src="/images/istio-production-case/weather-where-we-are-today.png" alt="weather-where-we-are-today"></p>
+<p>The Weather Company没有一次性将自己所有的API都使用istio，而是循序渐进的进行，基于以下的考虑:</p>
+<p><img src="/images/istio-production-case/weather-using-istio.png" alt="weather-using-istio"></p>
+<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><p><a href="https://www.youtube.com/watch?v=0fKi3NeCsSE" target="_blank" rel="noopener">Istio - The Weather Company’s Journey - Nick Nellis &amp; Fabio Oliveira, IBM (Any Skill Level)
+</a></p>
+<h2 id="HR-SaaS-人力资源系统-——Namely"><a href="#HR-SaaS-人力资源系统-——Namely" class="headerlink" title="HR SaaS(人力资源系统)——Namely"></a>HR SaaS(人力资源系统)——Namely</h2><p><a href="https://www.youtube.com/watch?v=iga5peu4E88" target="_blank" rel="noopener">Livestream : Services at Namely (Istio, Spinnaker, +) and some Machine Learning (Kubeflow)</a></p>
+<p><a href="https://www.safaribooksonline.com/videos/oscon-2018/9781492026075/9781492026075-video321571" target="_blank" rel="noopener">Using Istio for developing locally - Robert Ross (Namely)</a></p>
+<h2 id="Auto-Trader"><a href="#Auto-Trader" class="headerlink" title="Auto Trader"></a>Auto Trader</h2><p><a href="https://github.com/istio/istio/issues/3720" target="_blank" rel="noopener">Upgrading Istio</a></p>
+<h2 id="HP-FitStation"><a href="#HP-FitStation" class="headerlink" title="HP FitStation"></a>HP FitStation</h2><p><a href="https://istio.io/blog/2018/hp/" target="_blank" rel="noopener">How HP is building its next-generation footwear personalization platform on Istio</a></p>
+<h2 id="PubNub"><a href="#PubNub" class="headerlink" title="PubNub"></a>PubNub</h2><p><a href="https://www.pubnub.com/company/news-coverage/2018/istio-1-0-come-for-traffic-routing-stay-for-distributed-tracing/" target="_blank" rel="noopener">Istio 1.0: Come for Traffic Routing, Stay for Distributed Tracing</a></p>
+<h2 id="蚂蚁金服、阿里大文娱UC事业部——SOFA-Mesh"><a href="#蚂蚁金服、阿里大文娱UC事业部——SOFA-Mesh" class="headerlink" title="蚂蚁金服、阿里大文娱UC事业部——SOFA Mesh"></a>蚂蚁金服、阿里大文娱UC事业部——SOFA Mesh</h2><p>SOFAMesh 是基于 Istio 改进和扩展而来的 Service Mesh 大规模落地实践方案。在继承 Istio 强大功能和丰富特性的基础上，为满足大规模部署下的性能要求以及应对落地实践中的实际情况，有如下改进：</p>
+<ul>
+<li>采用 Golang 编写的 MOSN 取代 Envoy</li>
+<li>合并 Mixer 到数据平面以解决性能瓶颈(部分mixer功能)</li>
+<li>增强 Pilot 以实现更灵活的服务发现机制</li>
+<li>增加对 SOFA RPC、Dubbo 的支持</li>
+</ul>
+<!--more-->
+<h3 id="Golang版Sidecar——MOSN"><a href="#Golang版Sidecar——MOSN" class="headerlink" title="Golang版Sidecar——MOSN"></a>Golang版Sidecar——MOSN</h3><p><img src="/images/istio-production-case/golang-sidecar.png" alt="golang sidecar - MOSN"></p>
+<p>Golang版本Sidecar参考了Envoy，非常明确的实现XDS API。因为XDS API是目前的事实标准，实现XDS API使其让兼容Istio。</p>
+<p>在协议支持上，MOSN会支持标准的HTTP/1.1和HTTP/2。然后会增加一些特殊的协议扩展，包括 SOFA协议，Dubbo协议，HSF协议。</p>
+<h3 id="Mixer部分功能被合并至数据平面"><a href="#Mixer部分功能被合并至数据平面" class="headerlink" title="Mixer部分功能被合并至数据平面"></a>Mixer部分功能被合并至数据平面</h3><p><img src="/images/istio-production-case/mixer-merge.png" alt="mixer merge"></p>
+<p>最大的变化在Mixer，其实刚才的goland版 sidecar虽然是全新编写，但是说白了是对Envoy的替换，在架构上没有什么变化。但这一步的变化就非常大，我们会合并一部分的Mixer功能。</p>
+<p>Mixer的三大功能：</p>
+<ul>
+<li>check。也叫precondition，前置条件检查，比如说黑白名单，权限。</li>
+<li>quota。比如说访问次数之类。</li>
+<li>report。比如说日志，度量等。</li>
+</ul>
+<p>三大功能里面，前两个功能是同步阻塞的，就是一定要检查通过，或者是说quota验证OK，才能往下走。如果结果没回来只能等，因为这是业务逻辑，必须要等。而Report是可以通过异步和批量的方式来做的。</p>
+<p>此处，SOFA Mesh给出的合并方案是：将mixer原来的两个部分 check 和 quota 合并进来，原有 report 部分继续保留在mixer里面。</p>
+<h3 id="增强版Pilot"><a href="#增强版Pilot" class="headerlink" title="增强版Pilot"></a>增强版Pilot</h3><p><img src="/images/istio-production-case/pilot-enhance.png" alt="enhanced pilot"></p>
+<p>SOFA Mesh大幅扩展和增强Istio中的Pilot模块:</p>
+<ul>
+<li>增加SOFARegistry（蚂蚁金服内部的服务注册中心）的Adapter，提供超大规模（服务数以万计）服务注册和发现的解决方案</li>
+<li>增加数据同步模块，以实现多个服务注册中心之间的数据交换</li>
+<li>增加Open Service Registry API，提供标准化的服务注册功能，因为现在Istio的方案只有服务发现，它的服务注册是走k8s的，用的是k8s的自动服务注册。如果想脱离k8s环境，就要提供服务注册的方案。</li>
+</ul>
+<h3 id="Roadmap"><a href="#Roadmap" class="headerlink" title="Roadmap"></a>Roadmap</h3><ul>
+<li>8月底发布 0.2.0 版本</li>
+<li>9月份启动在 UC 的落地</li>
+<li>蚂蚁主站落地</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Istio/" rel="tag"># Istio</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/09/26/xDS-REST-and-gRPC-protocol/" rel="next" title="xDS REST and gRPC protocol">
+                <i class="fa fa-chevron-left"></i> xDS REST and gRPC protocol
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Goku</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">categories</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Istio-生产案例"><span class="nav-number">1.</span> <span class="nav-text">Istio 生产案例</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#房产交易平台——Trulia"><span class="nav-number">1.1.</span> <span class="nav-text">房产交易平台——Trulia</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#The-Weather-Company"><span class="nav-number">1.2.</span> <span class="nav-text">The Weather Company</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#现状"><span class="nav-number">1.2.1.</span> <span class="nav-text">现状</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#引入Istio"><span class="nav-number">1.2.2.</span> <span class="nav-text">引入Istio</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考"><span class="nav-number">1.2.3.</span> <span class="nav-text">参考</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HR-SaaS-人力资源系统-——Namely"><span class="nav-number">1.3.</span> <span class="nav-text">HR SaaS(人力资源系统)——Namely</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Auto-Trader"><span class="nav-number">1.4.</span> <span class="nav-text">Auto Trader</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HP-FitStation"><span class="nav-number">1.5.</span> <span class="nav-text">HP FitStation</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#PubNub"><span class="nav-number">1.6.</span> <span class="nav-text">PubNub</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#蚂蚁金服、阿里大文娱UC事业部——SOFA-Mesh"><span class="nav-number">1.7.</span> <span class="nav-text">蚂蚁金服、阿里大文娱UC事业部——SOFA Mesh</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Golang版Sidecar——MOSN"><span class="nav-number">1.7.1.</span> <span class="nav-text">Golang版Sidecar——MOSN</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Mixer部分功能被合并至数据平面"><span class="nav-number">1.7.2.</span> <span class="nav-text">Mixer部分功能被合并至数据平面</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#增强版Pilot"><span class="nav-number">1.7.3.</span> <span class="nav-text">增强版Pilot</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Roadmap"><span class="nav-number">1.7.4.</span> <span class="nav-text">Roadmap</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Goku</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

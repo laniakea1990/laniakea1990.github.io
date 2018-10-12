@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Istio,Envoy," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Envoy v2 APIs for developersGoalsThis repository contains both the implemented and draft v2 JSON REST and gRPCEnvoy APIs. Version 2 of the Envoy API evolves existing APIs and introduces new APIs to:">
+<meta name="keywords" content="Istio,Envoy">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Envoy v2 APIs for developers">
+<meta property="og:url" content="http://yoursite.com/2018/09/26/Envoy-v2-APIs-for-developers/index.html">
+<meta property="og:site_name" content="面朝大海 春暖花开">
+<meta property="og:description" content="Envoy v2 APIs for developersGoalsThis repository contains both the implemented and draft v2 JSON REST and gRPCEnvoy APIs. Version 2 of the Envoy API evolves existing APIs and introduces new APIs to:">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2018-10-12T01:22:27.477Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Envoy v2 APIs for developers">
+<meta name="twitter:description" content="Envoy v2 APIs for developersGoalsThis repository contains both the implemented and draft v2 JSON REST and gRPCEnvoy APIs. Version 2 of the Envoy API evolves existing APIs and introduces new APIs to:">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/09/26/Envoy-v2-APIs-for-developers/"/>
+
+
+
+
+
+  <title>Envoy v2 APIs for developers | 面朝大海 春暖花开</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?0080baa52f68b20f9159197d012ef9cb";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">面朝大海 春暖花开</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/09/26/Envoy-v2-APIs-for-developers/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Goku">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="面朝大海 春暖花开">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Envoy v2 APIs for developers</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-09-26T09:30:18+08:00">
+                2018-09-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Istio/" itemprop="url" rel="index">
+                    <span itemprop="name">Istio</span>
+                  </a>
+                </span>
+
+                
+                
+                  , 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Istio/Envoy/" itemprop="url" rel="index">
+                    <span itemprop="name">Envoy</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="Envoy-v2-APIs-for-developers"><a href="#Envoy-v2-APIs-for-developers" class="headerlink" title="Envoy v2 APIs for developers"></a>Envoy v2 APIs for developers</h1><h2 id="Goals"><a href="#Goals" class="headerlink" title="Goals"></a>Goals</h2><p>This repository contains both the implemented and draft v2 JSON REST and gRPC<br><a href="https://github.com/envoyproxy/envoy/" target="_blank" rel="noopener">Envoy</a> APIs.</p>
+<p>Version 2 of the Envoy API evolves existing APIs and introduces new APIs to:</p>
+<ul>
+<li>Allow for more advanced load balancing through load and resource utilization reporting to management servers.</li>
+<li>Improve N^2 health check scalability issues by optionally offloading health checking to other Envoy instances.</li>
+<li>Support Envoy deployment in edge, sidecar and middle proxy deployment models via changes to the listener model and CDS/SDS APIs.</li>
+<li>Allow streaming updates from the management server on change, instead of polling APIs from Envoy. gRPC APIs will be supported<br>alongside JSON REST APIs to provide for this.</li>
+<li>Ensure all Envoy runtime configuration is dynamically discoverable via API<br>calls, including listener configuration, certificates and runtime settings, which are today sourced from the filesystem. There<br>will still remain a static bootstrap configuration file that will specify items<br>unlikely to change during runtime, including the Envoy node identity, xDS<br>management server addresses, administration interface and tracing<br>configuration.</li>
+<li>Revisit and where appropriate cleanup any v1 technical debt.</li>
+</ul>
+<a id="more"></a>
+<h2 id="Status"><a href="#Status" class="headerlink" title="Status"></a>Status</h2><p>See <a href="https://www.envoyproxy.io/docs/envoy/latest/configuration/overview/v2_overview.html#status" target="_blank" rel="noopener">here</a><br>for the current status of the v2 APIs.</p>
+<p>See <a href="CONTRIBUTING.md#api-changes">here</a> for the v2 API change process.</p>
+<h2 id="Principles"><a href="#Principles" class="headerlink" title="Principles"></a>Principles</h2><ul>
+<li><p><a href="https://developers.google.com/protocol-buffers/docs/proto3" target="_blank" rel="noopener">Proto3</a> will be<br>used to specify the canonical API. This will provide directly the gRPC API and<br>via gRPC-JSON transcoding the JSON REST API. A textual YAML input will be<br>supported for filesystem configuration files (e.g. the bootstrap file), in<br>addition to JSON, as a syntactic convenience. YAML file contents will be<br>internally converted to JSON and then follow the standard JSON-proto3<br>conversion during Envoy config ingestion.</p>
+</li>
+<li><p>xDS APIs should support eventual consistency. For example, if RDS references a<br>cluster that has not yet been supplied by CDS, it should be silently ignored<br>and traffic not forwarded until the CDS update occurs. Stronger consistency<br>guarantees are possible if the management server is able to sequence the xDS<br>APIs carefully (for example by using the ADS API below). By following the<br><code>[CDS, EDS, LDS, RDS]</code> sequence for all pertinent resources, it will be<br>possible to avoid traffic outages during configuration update.</p>
+</li>
+<li><p>The API is primarily intended for machine generation and consumption. It is<br>expected that the management server is responsible for mapping higher level<br>configuration concepts to API responses. Similarly, static configuration<br>fragments may be generated by templating tools, etc. The APIs and tools<br>used to generate xDS configuration are beyond the scope of the definitions in<br>this repository.</p>
+</li>
+<li><p>REST-JSON API equivalents will be provided for the basic singleton xDS<br>subscription services CDS/EDS/LDS/RDS/SDS. Advanced APIs such as HDS, ADS and<br>EDS multi-dimensional LB will be gRPC only. This avoids having to map<br>complicated bidirectional stream semantics onto REST.</p>
+</li>
+<li><p>Listeners will be immutable. Any updates to a listener via LDS will require<br>the draining of existing connections for the specific bound IP/port. As a<br>result, new requests will only be guaranteed to observe the new configuration<br>after existing connections have drained or the drain timeout.</p>
+</li>
+<li><p>Versioning will be expressed via <a href="https://developers.google.com/protocol-buffers/docs/proto3#packages" target="_blank" rel="noopener">proto3 package<br>namespaces</a>,<br>i.e. <code>package envoy.api.v2;</code>.</p>
+</li>
+<li><p>Custom components (e.g. filters, resolvers, loggers) will use a reverse DNS naming scheme,<br>e.g. <code>com.google.widget</code>, <code>com.lyft.widget</code>.</p>
+</li>
+</ul>
+<h2 id="APIs"><a href="#APIs" class="headerlink" title="APIs"></a>APIs</h2><p>Unless otherwise stated, the APIs with the same names as v1 APIs have a similar role.</p>
+<ul>
+<li><a href="envoy/api/v2/cds.proto">Cluster Discovery Service (CDS)</a>.</li>
+<li><a href="envoy/api/v2/eds.proto">Endpoint Discovery Service (EDS)</a>. This has the same role as SDS in the <a href="https://www.envoyproxy.io/docs/envoy/latest/api-v1/cluster_manager/sds" target="_blank" rel="noopener">v1 API</a>,<br>the new name better describes what the API does in practice. Advanced global load balancing capable of utilizing N-dimensional upstream metrics is now supported.</li>
+<li><a href="envoy/service/discovery/v2/hds.proto">Health Discovery Service (HDS)</a>. This new API supports efficient endpoint health discovery by the management server via the Envoy instances it manages. Individual Envoy instances<br>will typically receive HDS instructions to health check a subset of all<br>endpoints. The health check subset may not be a subset of the Envoy instance’s<br>EDS endpoints.</li>
+<li><a href="envoy/api/v2/lds.proto">Listener Discovery Service (LDS)</a>. This new API supports dynamic discovery of the listener configuration (which ports to bind to, TLS details, filter chains, etc.).</li>
+<li><a href="envoy/service/metrics/v2/metrics_service.proto">Metric Service (MS)</a>. This new API allows Envoy to push (stream) metrics forever for servers to consume.</li>
+<li><a href="envoy/service/ratelimit/v2/rls.proto">Rate Limit Service (RLS)</a></li>
+<li><a href="envoy/api/v2/rds.proto">Route Discovery Service (RDS)</a>.</li>
+<li><a href="envoy/service/discovery/v2/sds.proto">Secret Discovery Service (SDS)</a>.</li>
+</ul>
+<p>In addition to the above APIs, an aggregation API will be provided to allow for<br>fine grained control over the sequencing of API updates across discovery<br>services:</p>
+<ul>
+<li><a href="envoy/api/v2/discovery.proto">Aggregated Discovery Service (ADS)</a>. See<br>the <a href="https://www.envoyproxy.io/docs/envoy/latest/configuration/overview/v2_overview#aggregated-discovery-service" target="_blank" rel="noopener">ADS overview</a>.</li>
+</ul>
+<p>A protocol description for the xDS APIs is provided <a href="XDS_PROTOCOL.md">here</a>.</p>
+<h2 id="Terminology"><a href="#Terminology" class="headerlink" title="Terminology"></a>Terminology</h2><p>Some relevant <a href="https://www.envoyproxy.io/docs/envoy/latest/intro/arch_overview/terminology.html" target="_blank" rel="noopener">existing terminology</a> is<br>repeated below and some new v2 terms introduced.</p>
+<ul>
+<li><p>Cluster: A cluster is a group of logically similar endpoints that Envoy<br>connects to. In v2, RDS routes points to clusters, CDS provides cluster configuration and<br>Envoy discovers the cluster members via EDS.</p>
+</li>
+<li><p>Downstream: A downstream host connects to Envoy, sends requests, and receives responses.</p>
+</li>
+<li><p>Endpoint: An endpoint is an upstream host that is a member of one or more clusters. Endpoints are discovered via EDS.</p>
+</li>
+<li><p>Listener: A listener is a named network location (e.g., port, unix domain socket, etc.) that can be connected to by downstream clients. Envoy exposes one or more listeners that downstream hosts connect to.</p>
+</li>
+<li><p>Locality: A location where an Envoy instance or an endpoint runs. This includes<br>region, zone and sub-zone identification.</p>
+</li>
+<li><p>Management server: A logical server implementing the v2 Envoy APIs. This is not necessarily a single physical machine since it may be replicated/sharded and API serving for different xDS APIs may be implemented on different physical machines.</p>
+</li>
+<li><p>Region: Geographic region where a zone is located.</p>
+</li>
+<li><p>Sub-zone: Location within a zone where an Envoy instance or an endpoint runs.<br>This allows for multiple load balancing targets within a zone.</p>
+</li>
+<li><p>Upstream: An upstream host receives connections and requests from Envoy and returns responses.</p>
+</li>
+<li><p>xDS: CDS/EDS/HDS/LDS/RLS/RDS/SDS APIs.</p>
+</li>
+<li><p>Zone: Availability Zone (AZ) in AWS, Zone in GCP.</p>
+</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Istio/" rel="tag"># Istio</a>
+          
+            <a href="/tags/Envoy/" rel="tag"># Envoy</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/09/26/xDS-REST-and-gRPC-protocol/" rel="prev" title="xDS REST and gRPC protocol">
+                xDS REST and gRPC protocol <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Goku</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">categories</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Envoy-v2-APIs-for-developers"><span class="nav-number">1.</span> <span class="nav-text">Envoy v2 APIs for developers</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Goals"><span class="nav-number">1.1.</span> <span class="nav-text">Goals</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Status"><span class="nav-number">1.2.</span> <span class="nav-text">Status</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Principles"><span class="nav-number">1.3.</span> <span class="nav-text">Principles</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#APIs"><span class="nav-number">1.4.</span> <span class="nav-text">APIs</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Terminology"><span class="nav-number">1.5.</span> <span class="nav-text">Terminology</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Goku</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

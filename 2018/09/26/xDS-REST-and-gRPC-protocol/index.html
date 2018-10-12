@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Istio,Envoy," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="xDS REST and gRPC protocolEnvoy discovers its various dynamic resources via the filesystem or by queryingone or more management servers. Collectively, these discovery services and theircorresponding A">
+<meta name="keywords" content="Istio,Envoy">
+<meta property="og:type" content="article">
+<meta property="og:title" content="xDS REST and gRPC protocol">
+<meta property="og:url" content="http://yoursite.com/2018/09/26/xDS-REST-and-gRPC-protocol/index.html">
+<meta property="og:site_name" content="面朝大海 春暖花开">
+<meta property="og:description" content="xDS REST and gRPC protocolEnvoy discovers its various dynamic resources via the filesystem or by queryingone or more management servers. Collectively, these discovery services and theircorresponding A">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="http://yoursite.com/images/xds/simple-ack.svg">
+<meta property="og:image" content="http://yoursite.com/images/xds/simple-ack.svg">
+<meta property="og:image" content="http://yoursite.com/images/xds/later-ack.svg">
+<meta property="og:image" content="http://yoursite.com/images/xds/eds-same-stream.svgg">
+<meta property="og:image" content="http://yoursite.com/images/xds/eds-distinct-stream.svg">
+<meta property="og:image" content="http://yoursite.com/images/xds/cds-eds-resources.svg">
+<meta property="og:image" content="http://yoursite.com/images/xds/update-race.svg">
+<meta property="og:image" content="http://yoursite.com/images/xds/stale-requests.svg">
+<meta property="og:image" content="http://yoursite.com/images/xds/ads.svg">
+<meta property="og:image" content="http://yoursite.com/images/xds/incremental.svg">
+<meta property="og:image" content="http://yoursite.com/images/xds/incremental-reconnect.svg">
+<meta property="og:updated_time" content="2018-10-12T01:22:27.477Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="xDS REST and gRPC protocol">
+<meta name="twitter:description" content="xDS REST and gRPC protocolEnvoy discovers its various dynamic resources via the filesystem or by queryingone or more management servers. Collectively, these discovery services and theircorresponding A">
+<meta name="twitter:image" content="http://yoursite.com/images/xds/simple-ack.svg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/09/26/xDS-REST-and-gRPC-protocol/"/>
+
+
+
+
+
+  <title>xDS REST and gRPC protocol | 面朝大海 春暖花开</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?0080baa52f68b20f9159197d012ef9cb";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">面朝大海 春暖花开</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/09/26/xDS-REST-and-gRPC-protocol/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Goku">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="面朝大海 春暖花开">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">xDS REST and gRPC protocol</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-09-26T09:40:37+08:00">
+                2018-09-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Istio/" itemprop="url" rel="index">
+                    <span itemprop="name">Istio</span>
+                  </a>
+                </span>
+
+                
+                
+                  , 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Istio/Envoy/" itemprop="url" rel="index">
+                    <span itemprop="name">Envoy</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="xDS-REST-and-gRPC-protocol"><a href="#xDS-REST-and-gRPC-protocol" class="headerlink" title="xDS REST and gRPC protocol"></a>xDS REST and gRPC protocol</h1><p>Envoy discovers its various dynamic resources via the filesystem or by querying<br>one or more management servers. Collectively, these discovery services and their<br>corresponding APIs are referred to as <em>xDS</em>. Resources are requested via<br><em>subscriptions</em>, by specifying a filesystem path to watch, initiating gRPC<br>streams or polling a REST-JSON URL. The latter two methods involve sending<br>requests with a<br><a href="https://www.envoyproxy.io/docs/envoy/latest/api-v2/api/v2/discovery.proto#discoveryrequest" target="_blank" rel="noopener"><code>DiscoveryRequest</code></a><br>proto payload. Resources are delivered in a<br><a href="https://www.envoyproxy.io/docs/envoy/latest/api-v2/api/v2/discovery.proto#discoveryresponse" target="_blank" rel="noopener"><code>DiscoveryResponse</code></a><br>proto payload in all methods. We discuss each type of subscription below.</p>
+<a id="more"></a>
+<h2 id="Filesystem-subscriptions"><a href="#Filesystem-subscriptions" class="headerlink" title="Filesystem subscriptions"></a>Filesystem subscriptions</h2><p>The simplest approach to delivering dynamic configuration is to place it at a<br>well known path specified in the<br><a href="https://www.envoyproxy.io/docs/envoy/latest/api-v2/api/v2/core/config_source.proto#core-configsource" target="_blank" rel="noopener"><code>ConfigSource</code></a>.<br>Envoy will use <code>inotify</code> (<code>kqueue</code> on Mac OS X) to monitor the file for changes<br>and parse the <code>DiscoveryResponse</code> proto in the file on update. Binary<br>protobufs, JSON, YAML and proto text are supported formats for the<br><code>DiscoveryResponse</code>.</p>
+<p>There is no mechanism available for filesystem subscriptions to ACK/NACK updates<br>beyond stats counters and logs. The last valid configuration for an xDS API will<br>continue to apply if an configuration update rejection occurs.</p>
+<h2 id="Streaming-gRPC-subscriptions"><a href="#Streaming-gRPC-subscriptions" class="headerlink" title="Streaming gRPC subscriptions"></a>Streaming gRPC subscriptions</h2><h3 id="Singleton-resource-type-discovery"><a href="#Singleton-resource-type-discovery" class="headerlink" title="Singleton resource type discovery"></a>Singleton resource type discovery</h3><p>A gRPC<br><a href="https://www.envoyproxy.io/docs/envoy/latest/api-v2/api/v2/core/config_source.proto#core-apiconfigsource" target="_blank" rel="noopener"><code>ApiConfigSource</code></a><br>can be specified independently for each xDS API, pointing at an upstream<br>cluster corresponding to a management server. This will initiate an independent<br>bidirectional gRPC stream for each xDS resource type, potentially to distinct<br>management servers. API delivery is eventually consistent. See<br><a href="#aggregated-discovery-service">ADS</a> below for situations in which explicit<br>control of sequencing is required.</p>
+<h4 id="Type-URLs"><a href="#Type-URLs" class="headerlink" title="Type URLs"></a>Type URLs</h4><p>Each xDS API is concerned with resources of a given type. There is a 1:1<br>correspondence between an xDS API and a resource type. That is:</p>
+<ul>
+<li><a href="https://github.com/envoyproxy/data-plane-api/blob/master/envoy/api/v2/lds.proto" target="_blank" rel="noopener">LDS: <code>envoy.api.v2.Listener</code></a></li>
+<li><a href="https://github.com/envoyproxy/data-plane-api/blob/master/envoy/api/v2/rds.proto" target="_blank" rel="noopener">RDS: <code>envoy.api.v2.RouteConfiguration</code></a></li>
+<li><a href="https://github.com/envoyproxy/data-plane-api/blob/master/envoy/api/v2/cds.proto" target="_blank" rel="noopener">CDS: <code>envoy.api.v2.Cluster</code></a></li>
+<li><a href="https://github.com/envoyproxy/data-plane-api/blob/master/envoy/api/v2/eds.proto" target="_blank" rel="noopener">EDS: <code>envoy.api.v2.ClusterLoadAssignment</code></a></li>
+<li><a href="https://github.com/envoyproxy/data-plane-api/blob/master/envoy/api/v2/auth/cert.proto" target="_blank" rel="noopener">SDS: <code>envoy.api.v2.Auth.Secret</code></a></li>
+</ul>
+<p>The concept of <a href="https://developers.google.com/protocol-buffers/docs/proto3#any" target="_blank" rel="noopener"><em>type<br>URLs</em></a> appears<br>below, and takes the form <code>type.googleapis.com/&lt;resource type&gt;</code>, e.g.<br><code>type.googleapis.com/envoy.api.v2.Cluster</code> for CDS. In various requests from<br>Envoy and responses by the management server, the resource type URL is stated.</p>
+<h4 id="ACK-NACK-and-versioning"><a href="#ACK-NACK-and-versioning" class="headerlink" title="ACK/NACK and versioning"></a>ACK/NACK and versioning</h4><p>Each stream begins with a <code>DiscoveryRequest</code> from Envoy, specifying the list of<br>resources to subscribe to, the type URL corresponding to the subscribed<br>resources, the node identifier and an empty <code>version_info</code>. An example EDS request<br>might be:</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">version_info:</span></span><br><span class="line"><span class="attr">node:</span> <span class="string">&#123;</span> <span class="attr">id:</span> <span class="string">envoy</span> <span class="string">&#125;</span></span><br><span class="line"><span class="attr">resource_names:</span></span><br><span class="line"><span class="bullet">-</span> <span class="string">foo</span></span><br><span class="line"><span class="bullet">-</span> <span class="string">bar</span></span><br><span class="line"><span class="attr">type_url:</span> <span class="string">type.googleapis.com/envoy.api.v2.ClusterLoadAssignment</span></span><br><span class="line"><span class="attr">response_nonce:</span></span><br></pre></td></tr></table></figure>
+<p>The management server may reply either immediately or when the requested<br>resources are available with a <code>DiscoveryResponse</code>, e.g.:</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">version_info:</span> <span class="string">X</span></span><br><span class="line"><span class="attr">resources:</span></span><br><span class="line"><span class="bullet">-</span> <span class="string">foo</span> <span class="string">ClusterLoadAssignment</span> <span class="string">proto</span> <span class="string">encoding</span></span><br><span class="line"><span class="bullet">-</span> <span class="string">bar</span> <span class="string">ClusterLoadAssignment</span> <span class="string">proto</span> <span class="string">encoding</span></span><br><span class="line"><span class="attr">type_url:</span> <span class="string">type.googleapis.com/envoy.api.v2.ClusterLoadAssignment</span></span><br><span class="line"><span class="attr">nonce:</span> <span class="string">A</span></span><br></pre></td></tr></table></figure>
+<p>After processing the <code>DiscoveryResponse</code>, Envoy will send a new request on the<br>stream, specifying the last version successfully applied and the nonce provided<br>by the management server. If the update was successfully applied, the<br><code>version_info</code> will be <strong>X</strong>, as indicated in the sequence diagram:</p>
+<p><img src="/images/xds/simple-ack.svg" alt="Version update after ACK"></p>
+<p>In this sequence diagram, and below, the following format is used to abbreviate<br>messages:</p>
+<ul>
+<li><code>DiscoveryRequest</code>: (V=<code>version_info</code>,R=<code>resource_names</code>,N=<code>response_nonce</code>,T=<code>type_url</code>)</li>
+<li><code>DiscoveryResponse</code>: (V=<code>version_info</code>,R=<code>resources</code>,N=<code>nonce</code>,T=<code>type_url</code>)</li>
+</ul>
+<p>The version provides Envoy and the management server a shared notion of the<br>currently applied configuration, as well as a mechanism to ACK/NACK<br>configuration updates. If Envoy had instead rejected configuration update <strong>X</strong>,<br>it would reply with<br><a href="https://www.envoyproxy.io/docs/envoy/latest/api-v2/api/v2/discovery.proto#envoy-api-field-discoveryrequest-error-detail" target="_blank" rel="noopener"><code>error_detail</code></a><br>populated and its previous version, which in this case was the empty<br>initial version. The error_detail has more details around the exact error message<br>populated in the message field:</p>
+<p><img src="/images/xds/simple-ack.svg" alt="No version update after NACK"></p>
+<p>Later, an API update may succeed at a new version <strong>Y</strong>:</p>
+<p><img src="/images/xds/later-ack.svg" alt="ACK after NACK"></p>
+<p>Each stream has its own notion of versioning, there is no shared versioning<br>across resource types. When ADS is not used, even each resource of a given<br>resource type may have a<br>distinct version, since the Envoy API allows distinct EDS/RDS resources to point<br>at different <code>ConfigSource</code>s.</p>
+<h4 id="When-to-send-an-update"><a href="#When-to-send-an-update" class="headerlink" title="When to send an update"></a>When to send an update</h4><p>The management server should only send updates to the Envoy client when the<br>resources in the <code>DiscoveryResponse</code> have changed. Envoy replies to any<br><code>DiscoveryResponse</code> with a <code>DiscoveryRequest</code> containing the ACK/NACK<br>immediately after it has been either accepted or rejected. If the management<br>server provides the same set of resources rather than waiting for a change to<br>occur, it will cause Envoy and the management server to spin and have a severe<br>performance impact.</p>
+<p>Within a stream, new <code>DiscoveryRequest</code>s supersede any prior <code>DiscoveryRequest</code>s<br>having the same resource type. This means that the management server only needs<br>to respond to the latest <code>DiscoveryRequest</code> on each stream for any given resource<br>type.</p>
+<h4 id="Resource-hints"><a href="#Resource-hints" class="headerlink" title="Resource hints"></a>Resource hints</h4><p>The <code>resource_names</code> specified in the <code>DiscoveryRequest</code> are a hint. Some<br>resource types, e.g. <code>Cluster</code>s and <code>Listener</code>s will specify an empty<br><code>resource_names</code> list, since Envoy is interested in learning about all the<br><code>Cluster</code>s (CDS) and <code>Listener</code>s (LDS) that the management server(s) know about<br>corresponding to its node identification. Other resource types, e.g.<br><code>RouteConfiguration</code>s (RDS) and <code>ClusterLoadAssignment</code>s (EDS), follow from<br>earlier CDS/LDS updates and Envoy is able to explicitly enumerate these<br>resources.</p>
+<p>LDS/CDS resource hints will always be empty and it is expected that the<br>management server will provide the complete state of the LDS/CDS resources in<br>each response. An absent <code>Listener</code> or <code>Cluster</code> will be deleted.</p>
+<p>For EDS/RDS, the management server does not need to supply every requested<br>resource and may also supply additional, unrequested resources. <code>resource_names</code><br>is only a hint. Envoy will silently ignore any superfluous resources. When a<br>requested resource is missing in a RDS or EDS update, Envoy will retain the last<br>known value for this resource. The management server may be able to infer all<br>the required EDS/RDS resources from the <code>node</code> identification in the<br><code>DiscoveryRequest</code>, in which case this hint may be discarded. An empty EDS/RDS<br><code>DiscoveryResponse</code> is effectively a nop from the perspective of the respective<br>resources in the Envoy.</p>
+<p>When a <code>Listener</code> or <code>Cluster</code> is deleted, its corresponding EDS and RDS<br>resources are also deleted inside the Envoy instance. In order for EDS resources<br>to be known or tracked by Envoy, there must exist an applied <code>Cluster</code><br>definition (e.g. sourced via CDS). A similar relationship exists between RDS and<br><code>Listeners</code> (e.g. sourced via LDS).</p>
+<p>For EDS/RDS, Envoy may either generate a distinct stream for each resource of a<br>given type (e.g. if each <code>ConfigSource</code> has its own distinct upstream cluster<br>for a management server), or may combine together multiple resource requests for<br>a given resource type when they are destined for the same management server.<br>While this is left to implementation specifics, management servers should be capable<br>of handling one or more <code>resource_names</code> for a given resource type in each<br>request. Both sequence diagrams below are valid for fetching two EDS resources<br><code>{foo, bar}</code>:</p>
+<p><img src="/images/xds/eds-same-stream.svgg" alt="Multiple EDS requests on the same stream"><br><img src="/images/xds/eds-distinct-stream.svg" alt="Multiple EDS requests on distinct streams"></p>
+<h4 id="Resource-updates"><a href="#Resource-updates" class="headerlink" title="Resource updates"></a>Resource updates</h4><p>As discussed above, Envoy may update the list of <code>resource_names</code> it presents to<br>the management server in each <code>DiscoveryRequest</code> that ACK/NACKs a specific<br><code>DiscoveryResponse</code>. In addition, Envoy may later issue additional<br><code>DiscoveryRequest</code>s at a given <code>version_info</code> to update the management server<br>with new resource hints. For example, if Envoy is at EDS version <strong>X</strong> and knows<br>only about cluster <code>foo</code>, but then receives a CDS update and learns about <code>bar</code><br>in addition, it may issue an additional <code>DiscoveryRequest</code> for <strong>X</strong> with<br><code>{foo,bar}</code> as <code>resource_names</code>.</p>
+<p><img src="/images/xds/cds-eds-resources.svg" alt="CDS response leads to EDS resource hint update"></p>
+<p>There is a race condition that may arise here; if after a resource hint update<br>is issued by Envoy at <strong>X</strong>, but before the management server processes the<br>update it replies with a new version <strong>Y</strong>, the resource hint update may be<br>interpreted as a rejection of <strong>Y</strong> by presenting an <strong>X</strong> <code>version_info</code>. To<br>avoid this, the management server provides a <code>nonce</code> that Envoy uses to indicate<br>the specific <code>DiscoveryResponse</code> each <code>DiscoveryRequest</code> corresponds to:</p>
+<p><img src="/images/xds/update-race.svg" alt="EDS update race motivates nonces"></p>
+<p>The management server should not send a <code>DiscoveryResponse</code> for any<br><code>DiscoveryRequest</code> that has a stale nonce. A nonce becomes stale following a<br>newer nonce being presented to Envoy in a <code>DiscoveryResponse</code>. A management<br>server does not need to send an update until it determines a new version is<br>available. Earlier requests at a version then also become stale. It may process<br>multiple <code>DiscoveryRequests</code> at a version until a new version is ready.</p>
+<p><img src="/images/xds/stale-requests.svg" alt="Requests become stale"></p>
+<p>An implication of the above resource update sequencing is that Envoy does not<br>expect a <code>DiscoveryResponse</code> for every <code>DiscoveryRequest</code> it issues.</p>
+<h4 id="Eventual-consistency-considerations"><a href="#Eventual-consistency-considerations" class="headerlink" title="Eventual consistency considerations"></a>Eventual consistency considerations</h4><p>Since Envoy’s xDS APIs are eventually consistent, traffic may drop briefly<br>during updates. For example, if only cluster <strong>X</strong> is known via CDS/EDS,<br>a <code>RouteConfiguration</code> references cluster <strong>X</strong><br>and is then adjusted to cluster <strong>Y</strong> just before the CDS/EDS update<br>providing <strong>Y</strong>, traffic will be blackholed until <strong>Y</strong> is known about by the<br>Envoy instance.</p>
+<p>For some applications, a temporary drop of traffic is acceptable, retries at the<br>client or by other Envoy sidecars will hide this drop. For other scenarios where<br>drop can’t be tolerated, traffic drop could have been avoided by providing a<br>CDS/EDS update with both <strong>X</strong> and <strong>Y</strong>, then the RDS update repointing from<br><strong>X</strong> to <strong>Y</strong> and then a CDS/EDS update dropping <strong>X</strong>.</p>
+<p>In general, to avoid traffic drop, sequencing of updates should follow a<br><code>make before break</code> model, wherein</p>
+<ul>
+<li>CDS updates (if any) must always be pushed first.</li>
+<li>EDS updates (if any) must arrive after CDS updates for the respective clusters.</li>
+<li>LDS updates must arrive after corresponding CDS/EDS updates.</li>
+<li>RDS updates related to the newly added listeners must arrive in the end.</li>
+<li>Stale CDS clusters and related EDS endpoints (ones no longer being<br>referenced) can then be removed.</li>
+</ul>
+<p>xDS updates can be pushed independently if no new clusters/routes/listeners<br>are added or if it’s acceptable to temporarily drop traffic during<br>updates. Note that in case of LDS updates, the listeners will be warmed<br>before they receive traffic, i.e. the dependent routes are fetched through<br>RDS if configured. Clusters are warmed when adding/removing/updating<br>clusters. On the other hand, routes are not warmed, i.e., the management<br>plane must ensure that clusters referenced by a route are in place, before<br>pushing the updates for a route.</p>
+<h3 id="Aggregated-Discovery-Services-ADS"><a href="#Aggregated-Discovery-Services-ADS" class="headerlink" title="Aggregated Discovery Services (ADS)"></a>Aggregated Discovery Services (ADS)</h3><p>It’s challenging to provide the above guarantees on sequencing to avoid traffic<br>drop when management servers are distributed. ADS allow a single management<br>server, via a single gRPC stream, to deliver all API updates. This provides the<br>ability to carefully sequence updates to avoid traffic drop. With ADS, a single<br>stream is used with multiple independent <code>DiscoveryRequest</code>/<code>DiscoveryResponse</code><br>sequences multiplexed via the type URL. For any given type URL, the above<br>sequencing of <code>DiscoveryRequest</code> and <code>DiscoveryResponse</code> messages applies. An<br>example update sequence might look like:</p>
+<p><img src="/images/xds/ads.svg" alt="EDS/CDS multiplexed on an ADS stream"></p>
+<p>A single ADS stream is available per Envoy instance.</p>
+<p>An example minimal <code>bootstrap.yaml</code> fragment for ADS configuration is:</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">node:</span></span><br><span class="line"><span class="attr">  id:</span> <span class="string">&lt;node</span> <span class="string">identifier&gt;</span></span><br><span class="line"><span class="attr">dynamic_resources:</span></span><br><span class="line"><span class="attr">  cds_config:</span> <span class="string">&#123;ads:</span> <span class="string">&#123;&#125;&#125;</span></span><br><span class="line"><span class="attr">  lds_config:</span> <span class="string">&#123;ads:</span> <span class="string">&#123;&#125;&#125;</span></span><br><span class="line"><span class="attr">  ads_config:</span></span><br><span class="line"><span class="attr">    api_type:</span> <span class="string">GRPC</span></span><br><span class="line"><span class="attr">    grpc_services:</span></span><br><span class="line"><span class="attr">      envoy_grpc:</span></span><br><span class="line"><span class="attr">        cluster_name:</span> <span class="string">ads_cluster</span></span><br><span class="line"><span class="attr">static_resources:</span></span><br><span class="line"><span class="attr">  clusters:</span></span><br><span class="line"><span class="attr">  - name:</span> <span class="string">ads_cluster</span></span><br><span class="line"><span class="attr">    connect_timeout:</span> <span class="string">&#123;</span> <span class="attr">seconds:</span> <span class="number">5</span> <span class="string">&#125;</span></span><br><span class="line"><span class="attr">    type:</span> <span class="string">STATIC</span></span><br><span class="line"><span class="attr">    hosts:</span></span><br><span class="line"><span class="attr">    - socket_address:</span></span><br><span class="line"><span class="attr">        address:</span> <span class="string">&lt;ADS</span> <span class="string">management</span> <span class="string">server</span> <span class="string">IP</span> <span class="string">address&gt;</span></span><br><span class="line"><span class="attr">        port_value:</span> <span class="string">&lt;ADS</span> <span class="string">management</span> <span class="string">server</span> <span class="string">port&gt;</span></span><br><span class="line"><span class="attr">    lb_policy:</span> <span class="string">ROUND_ROBIN</span></span><br><span class="line"><span class="attr">    http2_protocol_options:</span> <span class="string">&#123;&#125;</span></span><br><span class="line"><span class="attr">admin:</span></span><br><span class="line">  <span class="string">...</span></span><br></pre></td></tr></table></figure>
+<h3 id="Incremental-xDS"><a href="#Incremental-xDS" class="headerlink" title="Incremental xDS"></a>Incremental xDS</h3><p>Incremental xDS is a separate xDS endpoint available for ADS, CDS and RDS that<br>allows:</p>
+<ul>
+<li>Incremental updates of the list of tracked resources by the xDS client.<br>This supports Envoy on-demand / lazily requesting additional resources. For<br>example, this may occur when a request corresponding to an unknown cluster<br>arrives.</li>
+<li>The xDS server can incremetally update the resources on the client.<br>This supports the goal of scalability of xDS resources. Rather than deliver<br>all 100k clusters when a single cluster is modified, the management server<br>only needs to deliver the single cluster that changed.</li>
+</ul>
+<p>An xDS incremental session is always in the context of a gRPC bidirectional<br>stream. This allows the xDS server to keep track of the state of xDS clients<br>connected to it. There is no REST version of Incremental xDS.</p>
+<p>In incremental xDS the nonce field is required and used to pair a<br><a href="https://www.envoyproxy.io/docs/envoy/latest/api-v2/api/v2/discovery.proto#discoveryrequest" target="_blank" rel="noopener"><code>IncrementalDiscoveryResponse</code></a><br>to a <a href="https://www.envoyproxy.io/docs/envoy/latest/api-v2/api/v2/discovery.proto#discoveryrequest" target="_blank" rel="noopener"><code>IncrementalDiscoveryRequest</code></a><br>ACK or NACK.<br>Optionally, a response message level system_version_info is present for<br>debugging purposes only.</p>
+<p><code>IncrementalDiscoveryRequest</code> can be sent in 3 situations:</p>
+<ol>
+<li>Initial message in a xDS bidirectional gRPC stream.</li>
+<li>As an ACK or NACK response to a previous <code>IncrementalDiscoveryResponse</code>.<br>In this case the <code>response_nonce</code> is set to the nonce value in the Response.<br>ACK or NACK is determined by the absence or presence of <code>error_detail</code>.</li>
+<li>Spontaneous <code>IncrementalDiscoveryRequest</code> from the client.<br>This can be done to dynamically add or remove elements from the tracked<br><code>resource_names</code> set. In this case <code>response_nonce</code> must be omitted.</li>
+</ol>
+<p>In this first example the client connects and receives a first update that it<br>ACKs. The second update fails and the client NACKs the update. Later the xDS<br>client spontaneously requests the “wc” resource.</p>
+<p><img src="/images/xds/incremental.svg" alt="Incremental session example"></p>
+<p>On reconnect the xDS Incremental client may tell the server of its known resources<br>to avoid resending them over the network.</p>
+<p><img src="/images/xds/incremental-reconnect.svg" alt="Incremental reconnect example"></p>
+<h2 id="REST-JSON-polling-subscriptions"><a href="#REST-JSON-polling-subscriptions" class="headerlink" title="REST-JSON polling subscriptions"></a>REST-JSON polling subscriptions</h2><p>Synchronous (long) polling via REST endpoints is also available for the xDS<br>singleton APIs. The above sequencing of messages is similar, except no<br>persistent stream is maintained to the management server. It is expected that<br>there is only a single outstanding request at any point in time, and as a result<br>the response nonce is optional in REST-JSON. The <a href="https://developers.google.com/protocol-buffers/docs/proto3#json" target="_blank" rel="noopener">JSON canonical transform of<br>proto3</a> is used<br>to encode <code>DiscoveryRequest</code> and <code>DiscoveryResponse</code> messages. ADS is not<br>available for REST-JSON polling.</p>
+<p>When the poll period is set to a small value, with the intention of long<br>polling, then there is also a requirement to avoid sending a <code>DiscoveryResponse</code><br><a href="#when-to-send-an-update">unless a change to the underlying resources has<br>occurred</a>.</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Istio/" rel="tag"># Istio</a>
+          
+            <a href="/tags/Envoy/" rel="tag"># Envoy</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/09/26/Envoy-v2-APIs-for-developers/" rel="next" title="Envoy v2 APIs for developers">
+                <i class="fa fa-chevron-left"></i> Envoy v2 APIs for developers
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/10/10/istio-production-case/" rel="prev" title="Istio-Production-Case">
+                Istio-Production-Case <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Goku</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">categories</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#xDS-REST-and-gRPC-protocol"><span class="nav-number">1.</span> <span class="nav-text">xDS REST and gRPC protocol</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Filesystem-subscriptions"><span class="nav-number">1.1.</span> <span class="nav-text">Filesystem subscriptions</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Streaming-gRPC-subscriptions"><span class="nav-number">1.2.</span> <span class="nav-text">Streaming gRPC subscriptions</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Singleton-resource-type-discovery"><span class="nav-number">1.2.1.</span> <span class="nav-text">Singleton resource type discovery</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Type-URLs"><span class="nav-number">1.2.1.1.</span> <span class="nav-text">Type URLs</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ACK-NACK-and-versioning"><span class="nav-number">1.2.1.2.</span> <span class="nav-text">ACK/NACK and versioning</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#When-to-send-an-update"><span class="nav-number">1.2.1.3.</span> <span class="nav-text">When to send an update</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Resource-hints"><span class="nav-number">1.2.1.4.</span> <span class="nav-text">Resource hints</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Resource-updates"><span class="nav-number">1.2.1.5.</span> <span class="nav-text">Resource updates</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Eventual-consistency-considerations"><span class="nav-number">1.2.1.6.</span> <span class="nav-text">Eventual consistency considerations</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Aggregated-Discovery-Services-ADS"><span class="nav-number">1.2.2.</span> <span class="nav-text">Aggregated Discovery Services (ADS)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Incremental-xDS"><span class="nav-number">1.2.3.</span> <span class="nav-text">Incremental xDS</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#REST-JSON-polling-subscriptions"><span class="nav-number">1.3.</span> <span class="nav-text">REST-JSON polling subscriptions</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Goku</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
