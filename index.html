@@ -309,10 +309,12 @@
 
       
         
-          <h1 id="Istio-生产案例"><a href="#Istio-生产案例" class="headerlink" title="Istio 生产案例"></a>Istio 生产案例</h1><h2 id="房产交易平台——Trulia"><a href="#房产交易平台——Trulia" class="headerlink" title="房产交易平台——Trulia"></a>房产交易平台——Trulia</h2><p><a href="https://www.trulia.com/blog/tech/microservice-observability-with-istio/" target="_blank" rel="noopener">Microservice Observability with Istio</a></p>
+          <h1 id="Istio-生产案例"><a href="#Istio-生产案例" class="headerlink" title="Istio 生产案例"></a>Istio 生产案例</h1><h2 id="Trulia——房产交易平台"><a href="#Trulia——房产交易平台" class="headerlink" title="Trulia——房产交易平台"></a>Trulia——房产交易平台</h2><h3 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h3><p>Trulia之前将公司网站 <a href="www.trulia.com">www.trulia.com</a> 这个单体应用分解成面向服务（SOA）的架构。许多遗留AWS服务都是通过AMI映像promotion进行部署的，并使用各种不同的方法实现可观测性(Observability)。将测量工具添加到代码库和基础架构所需的手动操作一直是Trulia面对的传统痛点。</p>
+<p>在2017年，Trulia 决定在 kubernetes 上构建所有的微服务，希望标准化微服务的指标、监控、流控等技术。Trulia 为了构建这样一个平台(将基本可观测性问题与构建微服务的用户分开，允许在使用该平台的所有微服务之间实现连接和可观察性的独立和共享创新)，选择的技术是容器和 kubernetes 的补充 istio。</p>
+<h3 id="Istio的引入"><a href="#Istio的引入" class="headerlink" title="Istio的引入"></a>Istio的引入</h3><p>Trulia 使用 Istio 透明代理 Kubernetes 工作负载中的所有通信。将所有遥测集合移出进程，将其与单个微服务的代码库分离。<br><img src="/images/istio-production-case/trulia-istio.jpg" alt="trulia-istio"><br>下图中展示的是Prometheus中收集的指标，用于报警和Grafana绘图。Envoy 被注入到每个工作负载中，并采集有关请求率、延迟和响应代码等信息。<br><img src="/images/istio-production-case/trulia-envoy.jpg" alt="trulia-envoy"></p>
+<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><p><a href="https://www.trulia.com/blog/tech/microservice-observability-with-istio/" target="_blank" rel="noopener">Microservice Observability with Istio</a></p>
 <p><a href="http://www.servicemesher.com/blog/microservice-observability-with-istio/" target="_blank" rel="noopener">Istio和Kubernetes帮助Trulia房产网站消除单体架构增强微服务的可观测性</a></p>
-<h2 id="The-Weather-Company"><a href="#The-Weather-Company" class="headerlink" title="The Weather Company"></a>The Weather Company</h2><h3 id="现状"><a href="#现状" class="headerlink" title="现状"></a>现状</h3><p>公司之前名为The Weather Channel，后改名为The Weather Company，2016年被IBM收购。</p>
-<p>api.weather.com是该公司的主要服务产品(a platform built to sell and distribute weather data, known as Sun Platform)。有超过40个microservices运行在这个 Sun Platform 上面，每天接受数十亿次调用.<br>
+<h2 id="Descartes-Labs-笛卡尔实验室-——为农业分析卫星遥感数据的初创公司"><a href="#Descartes-Labs-笛卡尔实验室-——为农业分析卫星遥感数据的初创公司" class="headerlink" title="Descartes Labs(笛卡尔实验室)——为农业分析卫星遥感数据的初创公司"></a>Descartes Labs(笛卡尔实验室)——为农业分析卫星遥感数据的初创公司</h2><h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>Descartes Labs 是一家通过分析卫星遥感数据为农业等相关行业提供数据服务的公司，公司有50多个microservice运行在GKE(Google Kubernetes Engine)平台上，卫星遥感数据存储在GCS(Google Cloud Storage)，其运行架构如下：<br><img src="/images/istio-production-case/Descartes-Labs-Core-API&#39;s-Pre-Istio.png" alt="Descartes-Labs-Core-API&#39;s-Pre-Istio"></p>
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2018/10/10/istio-production-case/#more" rel="contents">
