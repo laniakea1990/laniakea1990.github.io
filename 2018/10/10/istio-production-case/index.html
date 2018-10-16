@@ -107,7 +107,7 @@
 <meta property="og:image" content="http://yoursite.com/images/istio-production-case/golang-sidecar.png">
 <meta property="og:image" content="http://yoursite.com/images/istio-production-case/mixer-merge.png">
 <meta property="og:image" content="http://yoursite.com/images/istio-production-case/pilot-enhance.png">
-<meta property="og:updated_time" content="2018-10-16T08:47:35.140Z">
+<meta property="og:updated_time" content="2018-10-16T08:53:52.429Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Istio-Production-Case">
 <meta name="twitter:description" content="Istio 生产案例Trulia——房产交易平台引言Trulia之前将公司网站 www.trulia.com 这个单体应用分解成面向服务（SOA）的架构。许多遗留AWS服务都是通过AMI映像promotion进行部署的，并使用各种不同的方法实现可观测性(Observability)。将测量工具添加到代码库和基础架构所需的手动操作一直是Trulia面对的传统痛点。 在2017年，Trulia 决定在">
@@ -332,12 +332,15 @@
 
       
         <h1 id="Istio-生产案例"><a href="#Istio-生产案例" class="headerlink" title="Istio 生产案例"></a>Istio 生产案例</h1><h2 id="Trulia——房产交易平台"><a href="#Trulia——房产交易平台" class="headerlink" title="Trulia——房产交易平台"></a>Trulia——房产交易平台</h2><h3 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h3><p>Trulia之前将公司网站 <a href="www.trulia.com">www.trulia.com</a> 这个单体应用分解成面向服务（SOA）的架构。许多遗留AWS服务都是通过AMI映像promotion进行部署的，并使用各种不同的方法实现可观测性(Observability)。将测量工具添加到代码库和基础架构所需的手动操作一直是Trulia面对的传统痛点。</p>
-<p>在2017年，Trulia 决定在 kubernetes 上构建所有的微服务，希望标准化微服务的指标、监控、流控等技术。Trulia 为了构建这样一个平台(将基本可观测性问题与构建微服务的用户分开，允许在使用该平台的所有微服务之间实现连接和可观察性的独立和共享创新)，选择的技术是容器和 kubernetes 的补充 istio。</p>
-<h3 id="Istio的引入"><a href="#Istio的引入" class="headerlink" title="Istio的引入"></a>Istio的引入</h3><p>Trulia 使用 Istio 透明代理 Kubernetes 工作负载中的所有通信。将所有遥测集合移出进程，将其与单个微服务的代码库分离。<br><img src="/images/istio-production-case/trulia-istio.jpg" alt="trulia-istio"><br>下图中展示的是Prometheus中收集的指标，用于报警和Grafana绘图。Envoy 被注入到每个工作负载中，并采集有关请求率、延迟和响应代码等信息。<br><img src="/images/istio-production-case/trulia-envoy.jpg" alt="trulia-envoy"></p>
+<p>在2017年，Trulia 决定在 kubernetes 上构建所有的微服务，希望标准化微服务的指标、监控、流控等技术。Trulia 为了构建这样一个平台(将基本可观测性问题与构建微服务的用户分开，允许在使用该平台的所有微服务之间实现连接和可观察性的独立和共享创新)，选择的技术是容器和 kubernetes 的补充 istio。<br><a id="more"></a></p>
+<h3 id="Istio的引入"><a href="#Istio的引入" class="headerlink" title="Istio的引入"></a>Istio的引入</h3><p>Trulia 使用 Istio 透明代理 Kubernetes 工作负载中的所有通信。将所有遥测集合移出进程，将其与单个微服务的代码库分离。</p>
+<p><img src="/images/istio-production-case/trulia-istio.jpg" alt="trulia-istio"></p>
+<p>下图中展示的是Prometheus中收集的指标，用于报警和Grafana绘图。Envoy 被注入到每个工作负载中，并采集有关请求率、延迟和响应代码等信息。</p>
+<p><img src="/images/istio-production-case/trulia-envoy.jpg" alt="trulia-envoy"></p>
+<p>在kubernetes和istio的帮助下，Trulia 能够分解单体架构替换成可持续交付的微服务架构。团队不再被迫手动将工具添加到单个代码库或基础架构自动化中。Trulia工程师能够部署具有开箱即用的可观测性和单一指标来源的新的微服务。</p>
 <h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><p><a href="https://www.trulia.com/blog/tech/microservice-observability-with-istio/" target="_blank" rel="noopener">Microservice Observability with Istio</a></p>
 <p><a href="http://www.servicemesher.com/blog/microservice-observability-with-istio/" target="_blank" rel="noopener">Istio和Kubernetes帮助Trulia房产网站消除单体架构增强微服务的可观测性</a></p>
 <h2 id="Descartes-Labs-笛卡尔实验室-——为农业分析卫星遥感数据的初创公司"><a href="#Descartes-Labs-笛卡尔实验室-——为农业分析卫星遥感数据的初创公司" class="headerlink" title="Descartes Labs(笛卡尔实验室)——为农业分析卫星遥感数据的初创公司"></a>Descartes Labs(笛卡尔实验室)——为农业分析卫星遥感数据的初创公司</h2><h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>Descartes Labs 是一家通过分析卫星遥感数据为农业等相关行业提供数据服务的公司，公司有50多个microservice运行在GKE(Google Kubernetes Engine)平台上，卫星遥感数据存储在GCS(Google Cloud Storage)，其运行架构如下：<br><img src="/images/istio-production-case/Descartes-Labs-Core-API&#39;s-Pre-Istio.png" alt="Descartes-Labs-Core-API&#39;s-Pre-Istio"></p>
-<a id="more"></a>
 <h3 id="问题及Istio的引入"><a href="#问题及Istio的引入" class="headerlink" title="问题及Istio的引入"></a>问题及Istio的引入</h3><p>在扩展microservices时，Descartes Labs遇到了下面这几个问题：</p>
 <ul>
 <li>Visibility(Isito can give instant visibility into each service,which services are calling that specific service)</li>
