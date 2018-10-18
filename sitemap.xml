@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  
+  <url>
+    <loc>http://yoursite.com/2018/10/18/Istio-Production-Case/</loc>
+    
+    <lastmod>2018-10-18T08:18:56.168Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/2018/10/10/istio-production-case-jrr/</loc>
+    
+    <lastmod>2018-10-16T10:56:00.943Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/2018/09/26/Envoy-v2-APIs-for-developers/</loc>
+    
+    <lastmod>2018-10-12T01:22:27.477Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/2018/09/26/xDS-REST-and-gRPC-protocol/</loc>
+    
+    <lastmod>2018-10-12T01:22:27.477Z</lastmod>
+    
+  </url>
+  
+</urlset>
